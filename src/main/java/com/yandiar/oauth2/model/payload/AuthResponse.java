@@ -5,7 +5,11 @@
  */
 package com.yandiar.oauth2.model.payload;
 
+import com.yandiar.oauth2.model.entity.User;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 
@@ -14,12 +18,11 @@ import lombok.ToString;
  * @author YAR
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @ToString
 public class AuthResponse {
     private String accessToken;
-    private String tokenType = "Bearer";
-    
-    public AuthResponse(String accessToken) {
-        this.accessToken = accessToken;
-    }
+    private User user;
 }

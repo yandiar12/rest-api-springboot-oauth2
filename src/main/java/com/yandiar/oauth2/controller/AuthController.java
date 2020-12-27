@@ -16,6 +16,7 @@ import com.yandiar.oauth2.model.payload.SignUpRequest;
 import com.yandiar.oauth2.repository.UserRepository;
 import com.yandiar.oauth2.security.TokenProvider;
 import java.net.URI;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +24,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +37,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  */
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin
 public class AuthController {
     
     @Autowired
@@ -61,8 +64,15 @@ public class AuthController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
+        AuthResponse authResponse = new AuthResponse();
+        Optional<User> user = userRepository.findByEmail(loginRequest.getEmail());
+        User user_ = user.get();
         String token = tokenProvider.createToken(authentication);
-        return ResponseEntity.ok(new AuthResponse(token));
+        
+        authResponse.setAccessToken(token);
+        authResponse.setUser(user_);
+        
+        return ResponseEntity.ok(authResponse);
     }
     
     @PostMapping("/signup")

@@ -27,7 +27,7 @@ public class HomeController {
     @GetMapping("/")
     public ResponseEntity getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
         Map map = new HashMap();
-        map.put("id", "yes");
+        map.put("data", "I'm Home Page");
         return new ResponseEntity<Map>(map, HttpStatus.OK);
     }
     
